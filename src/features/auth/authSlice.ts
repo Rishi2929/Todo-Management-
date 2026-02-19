@@ -2,10 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { AuthState, User } from "./types";
 
+// const initialState: AuthState = {
+//   accessToken: localStorage.getItem("accessToken"),
+//   refreshToken: localStorage.getItem("refreshToken"),
+//   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
+// };
+
+const storedUser = localStorage.getItem("user");
+
 const initialState: AuthState = {
   accessToken: localStorage.getItem("accessToken"),
   refreshToken: localStorage.getItem("refreshToken"),
-  user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
+  user: storedUser ? JSON.parse(storedUser) : null,
 };
 
 const authSlice = createSlice({
