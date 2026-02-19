@@ -6,7 +6,19 @@ export interface User {
   role: Role;
 }
 
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    user: User;
+    expiresIn: number;
+  };
+}
+
 export interface AuthState {
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   user: User | null;
 }

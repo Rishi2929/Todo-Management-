@@ -1,17 +1,25 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { LoginPage } from "../features/auth/LoginPage";
+import { ProtectedRoute } from "../routes/ProtectedRoute";
+
+const DashboardPage = () => <div>Dashboard</div>;
 
 export const AppRouter = () => {
   return (
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
+
       <Route
-        path="/"
+        path="/dashboard"
         element={
-          <div>
-            <h1 className="text-slate-600 text-center text-2xl">Todo Management</h1>
-          </div>
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
         }
       />
-      <Route path="*" element={<div>404 - Not Found</div>} />
+
+      <Route path="/" element={<Navigate to="/dashboard" />} />
+      <Route path="*" element={<div>404</div>} />
     </Routes>
   );
 };

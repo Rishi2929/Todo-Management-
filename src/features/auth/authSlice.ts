@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit"; //Type-only imports prevent runtime bundle pollution.
+import type { PayloadAction } from "@reduxjs/toolkit";
 import type { AuthState, User } from "./types";
 
 const initialState: AuthState = {
-  token: localStorage.getItem("token"),
+  accessToken: localStorage.getItem("accessToken"),
+  refreshToken: localStorage.getItem("refreshToken"),
   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
 };
 
@@ -11,18 +12,31 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ token: string; user: User }>) => {
-      state.token = action.payload.token;
-      state.user = action.payload.user;
+    setCredentials: (
+      state,
+      action: PayloadAction<{
+        accessToken: string;
+        refreshToken: string;
+        user: User;
+      }>
+    ) => {
+      const { accessToken, refreshToken, user } = action.payload;
 
-      localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
+      state.user = user;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user));
     },
     logout: (state) => {
-      state.token = null;
+      state.accessToken = null;
+      state.refreshToken = null;
       state.user = null;
 
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
     },
   },
