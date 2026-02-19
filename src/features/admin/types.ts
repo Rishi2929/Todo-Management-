@@ -1,8 +1,10 @@
+import type { Role } from "../../types/global";
+
 export interface AdminUser {
   _id: string;
   name: string;
   email: string;
-  role: "user" | "admin";
+  role: Role;
   createdAt: string;
   updatedAt: string;
 }
