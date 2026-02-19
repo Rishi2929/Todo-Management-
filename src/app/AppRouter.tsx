@@ -11,6 +11,7 @@ export const AppRouter = () => {
           </div>
         }
       />
+      <Route path="*" element={<div>404 - Not Found</div>} />
     </Routes>
   );
 };
