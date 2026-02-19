@@ -8,5 +8,5 @@ export const RoleGate = ({ role, children }: { role: Role; children: ReactNode }
 
   if (userRole !== role) return null;
 
-  return children;
+  return <>{children}</>;
 };
