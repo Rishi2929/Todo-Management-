@@ -7,8 +7,8 @@ import { toast } from "react-hot-toast";
 import { Mail, Lock, Loader2 } from "lucide-react";
 
 const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().email("Enter a valid email address"),
+  password: z.string().min(6, "Minimum 6 characters required"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -117,7 +117,7 @@ export const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="relative w-full inline-flex items-center justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition 
+              className="group relative w-full inline-flex items-center justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition 
               hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2
               disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
             >
