@@ -5,10 +5,7 @@ import { RoleGate } from "../routes/RoleGate";
 import { DashboardPage } from "../features/todos/pages/DashboardPage";
 import { ProfilePage } from "../features/profile/pages/ProfilePage";
 import { AdminPage } from "../features/admin/pages/AdminPage";
-
-// const DashboardPage = () => <div>Dashboard</div>;
-// const ProfilePage = () => <div>Profile</div>;
-// const AdminPage = () => <div>Admin</div>;
+import { AppLayout } from "../layouts/AppLayout";
 
 export const AppRouter = () => {
   return (
@@ -21,7 +18,9 @@ export const AppRouter = () => {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <DashboardPage />
+            <AppLayout>
+              <DashboardPage />
+            </AppLayout>
           </ProtectedRoute>
         }
       />
@@ -30,7 +29,9 @@ export const AppRouter = () => {
         path="/profile"
         element={
           <ProtectedRoute>
-            <ProfilePage />
+            <AppLayout>
+              <ProfilePage />
+            </AppLayout>
           </ProtectedRoute>
         }
       />
@@ -41,7 +42,9 @@ export const AppRouter = () => {
         element={
           <ProtectedRoute>
             <RoleGate role="ADMIN">
-              <AdminPage />
+              <AppLayout>
+                <AdminPage />
+              </AppLayout>
             </RoleGate>
           </ProtectedRoute>
         }
