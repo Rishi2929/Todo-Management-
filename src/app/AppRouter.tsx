@@ -4,10 +4,11 @@ import { ProtectedRoute } from "../routes/ProtectedRoute";
 import { RoleGate } from "../routes/RoleGate";
 import { DashboardPage } from "../features/todos/pages/DashboardPage";
 import { ProfilePage } from "../features/profile/pages/ProfilePage";
+import { AdminPage } from "../features/admin/pages/AdminPage";
 
 // const DashboardPage = () => <div>Dashboard</div>;
 // const ProfilePage = () => <div>Profile</div>;
-const AdminPage = () => <div>Admin</div>;
+// const AdminPage = () => <div>Admin</div>;
 
 export const AppRouter = () => {
   return (
