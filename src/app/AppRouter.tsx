@@ -1,9 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { LoginPage } from "../features/auth/LoginPage";
+import { LoginPage } from "../features/auth/pages/LoginPage";
 import { ProtectedRoute } from "../routes/ProtectedRoute";
 import { RoleGate } from "../routes/RoleGate";
+import { DashboardPage } from "../features/todos/pages/DashboardPage";
 
-const DashboardPage = () => <div>Dashboard</div>;
+// const DashboardPage = () => <div>Dashboard</div>;
 const ProfilePage = () => <div>Profile</div>;
 const AdminPage = () => <div>Admin</div>;
 

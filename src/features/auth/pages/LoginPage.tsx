@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "./hooks";
+import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Mail, Lock, Loader2 } from "lucide-react";
