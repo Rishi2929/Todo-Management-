@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../app/store";
 import { useAuth } from "../features/auth/hooks";
 import { LayoutDashboard, User, Shield, LogOut } from "lucide-react";
+import { useEffect } from "react";
 
 export const Sidebar = () => {
   const role = useSelector((state: RootState) => state.auth.user?.role);
@@ -12,6 +13,10 @@ export const Sidebar = () => {
 
   const active = "text-indigo-600";
   const inactive = "text-gray-500 hover:text-gray-900";
+
+  useEffect(() => {
+    console.log("sidebar");
+  }, []);
 
   return (
     <>

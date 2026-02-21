@@ -18,6 +18,6 @@ export interface TodosResponse {
     total: number;
     page: number;
     limit: number;
-    totalPages: number;
+    pages: number;
   };
 }

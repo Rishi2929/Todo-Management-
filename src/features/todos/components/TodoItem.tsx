@@ -29,7 +29,7 @@ export const TodoItem = ({ todo }: Props) => {
       </div>
 
       <button onClick={() => setConfirmOpen(true)} className="text-red-600 text-sm">
-        Delete
+        Deletesdfs
       </button>
 
       {confirmOpen && (

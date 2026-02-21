@@ -1,11 +1,14 @@
+import { Loader2 } from "lucide-react";
+
 interface Props {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
   userName: string;
+  isLoading: boolean;
 }
 
-export const DeleteUserModal = ({ open, onClose, onConfirm, userName }: Props) => {
+export const DeleteUserModal = ({ open, onClose, onConfirm, userName, isLoading }: Props) => {
   if (!open) return null;
 
   return (
@@ -17,12 +20,16 @@ export const DeleteUserModal = ({ open, onClose, onConfirm, userName }: Props) =
         </p>
 
         <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-3 py-1 border rounded">
+          <button onClick={onClose} disabled={isLoading} className="px-3 py-1 border rounded disabled:opacity-50">
             Cancel
           </button>
 
-          <button onClick={onConfirm} className="px-3 py-1 bg-red-600 text-white rounded">
-            Delete
+          <button
+            onClick={onConfirm}
+            disabled={isLoading}
+            className="px-3 py-1 bg-red-600 text-white rounded inline-flex items-center gap-2 disabled:opacity-60"
+          >
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Delete"}
           </button>
         </div>
       </div>

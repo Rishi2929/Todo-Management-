@@ -28,3 +28,15 @@ export const loginRequest = async (payload: LoginPayload) => {
     expiresIn,
   };
 };
+
+export const registerRequest = async (payload: { name: string; email: string; password: string }) => {
+  const { data } = await api.post("/register", payload);
+  return data;
+};
+
+export const refreshTokenRequest = async (refreshToken: string) => {
+  const response = await api.post("/refresh", {
+    refreshToken,
+  });
+  return response.data.data;
+};

@@ -1,41 +1,44 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "../hooks";
-import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Mail, Lock, User, Loader2 } from "lucide-react";
+import { registerRequest } from "../api";
 
 const schema = z.object({
-  email: z.string().email("Enter a valid email address"),
-  password: z.string().min(6, "Minimum 6 characters required"),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email"),
+  password: z
+    .string()
+    .min(8, "Minimum 8 characters")
+    .regex(/[A-Z]/, "Must include uppercase letter")
+    .regex(/[a-z]/, "Must include lowercase letter")
+    .regex(/[0-9]/, "Must include number"),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export const LoginPage = () => {
-  const { loginAsync, isLoading } = useAuth();
+export const RegisterPage = () => {
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
+  // console.log("aaaa: ", register("email"));
+
   const onSubmit = async (data: FormData) => {
     try {
-      await loginAsync({
-        ...data,
-        remember: true,
-      });
-
-      toast.success("Login successful");
-      navigate("/dashboard");
+      await registerRequest(data);
+      toast.success("Registration successful");
+      navigate("/login");
     } catch {
-      toast.error("Invalid credentials");
+      toast.error("Registration failed");
     }
   };
 
@@ -48,11 +51,41 @@ export const LoginPage = () => {
         {/* Card */}
         <div className="bg-white/90 backdrop-blur-sm shadow-sm rounded-xl border border-gray-200 p-8">
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Welcome Back</h1>
-            <p className="text-sm text-gray-500 mt-2">Sign in to access your dashboard</p>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Create Account</h1>
+            <p className="text-sm text-gray-500 mt-2">Sign up to get started</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+            {/* Name */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                Full Name
+              </label>
+
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+
+                <input
+                  id="name"
+                  type="text"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                  {...register("name")}
+                  className={`w-full pl-10 pr-4 py-3 text-sm rounded-xl border bg-white shadow-sm 
+                    focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600
+                    transition
+                    ${errors.name ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300"}`}
+                  placeholder="John Doe"
+                />
+              </div>
+
+              {errors.name && (
+                <p id="name-error" className="mt-2 text-xs text-red-600">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -102,7 +135,7 @@ export const LoginPage = () => {
                     focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600
                     transition
                     ${errors.password ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300"}`}
-                  placeholder="Enter your password"
+                  placeholder="Create a strong password"
                 />
               </div>
 
@@ -116,7 +149,7 @@ export const LoginPage = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="group relative w-full inline-flex items-center justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition 
               hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2
               disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
@@ -125,23 +158,27 @@ export const LoginPage = () => {
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
                 -translate-x-full group-hover:translate-x-full transition-transform duration-700"
               />
-              {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Login"}
+              {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Register"}
             </button>
 
-            {/* Register Redirect */}
+            {/* Login Redirect */}
             <div className="text-center pt-2">
               <p className="text-sm text-gray-600">
-                Don’t have an account?{" "}
-                <Link to="/register" className="text-indigo-600 font-medium">
-                  Register
-                </Link>
+                Already have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => navigate("/login")}
+                  className="font-semibold text-indigo-600 hover:text-indigo-700 transition"
+                >
+                  Login
+                </button>
               </p>
             </div>
           </form>
         </div>
 
         {/* Glass loading overlay */}
-        {isLoading && (
+        {isSubmitting && (
           <div className="absolute inset-0 rounded-xl bg-white/60 backdrop-blur-sm flex items-center justify-center">
             <Loader2 className="h-6 w-6 text-indigo-600 animate-spin" />
           </div>

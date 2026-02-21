@@ -5,12 +5,15 @@ import { RoleGate } from "../routes/RoleGate";
 import { DashboardPage } from "../features/todos/pages/DashboardPage";
 import { ProfilePage } from "../features/profile/pages/ProfilePage";
 import { AdminPage } from "../features/admin/pages/AdminPage";
-import { AppLayout } from "../layouts/AppLayout";
+import { AppLayout } from "../layout/AppLayout";
+import { RegisterPage } from "../features/auth/pages/RegisterPage";
 
 export const AppRouter = () => {
   return (
     <Routes>
       {/* Public */}
+      <Route path="/register" element={<RegisterPage />} />
+
       <Route path="/login" element={<LoginPage />} />
 
       {/* Protected Routes */}

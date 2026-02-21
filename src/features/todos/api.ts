@@ -1,4 +1,4 @@
-import { todoApi } from "../../lib/todoApi";
+import { todoApi } from "../../lib/axios";
 import type { Todo, TodosResponse } from "./types";
 
 export const fetchTodos = async (page: number, limit: number): Promise<TodosResponse> => {

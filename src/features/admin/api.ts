@@ -1,4 +1,5 @@
-import { userApi } from "../../lib/userApi";
+// import { userApi } from "../../lib/userApi";
+import { userApi } from "../../lib/axios";
 import type { UsersResponse, AdminUser, GetUsersPayload } from "./types";
 import type { Role } from "../../types/global";
 

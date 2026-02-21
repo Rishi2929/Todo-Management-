@@ -1,4 +1,4 @@
-import { userApi } from "../../lib/userApi";
+import { userApi } from "../../lib/axios";
 
 export const fetchProfile = async () => {
   const { data } = await userApi.get("/me");

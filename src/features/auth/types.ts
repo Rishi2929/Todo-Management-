@@ -6,6 +6,17 @@ export interface User {
   role: Role;
 }
 
+//generic interface
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+// export type LoginResponse =  {
+
+// }
+
 export interface LoginResponse {
   success: boolean;
   message: string;

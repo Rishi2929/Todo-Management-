@@ -1,34 +1,96 @@
 import axios from "axios";
+import type { AxiosInstance } from "axios";
 import { store } from "../app/store";
-import { logout } from "../features/auth/authSlice";
+import { setCredentials, logout } from "../features/auth/authSlice";
 
-export const api = axios.create({
-  baseURL: "https://assignment.theregiment.in/api/v1/auth",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const BASE_URL = "https://assignment.theregiment.in/api/v1";
+const AUTH_URL = `${BASE_URL}/auth`;
 
-api.interceptors.request.use((config) => {
-  config.headers["x-api-key"] = import.meta.env.VITE_API_KEY;
+// ─── Refresh token state ───────────────────────────────────────────────────
+let isRefreshing = false;
+let subscribers: ((token: string) => void)[] = [];
 
-  const token = store.getState().auth.accessToken;
+const onTokenRefreshed = (token: string) => {
+  subscribers.forEach((cb) => cb(token));
+  subscribers = [];
+};
 
-  const isAuthRoute = config.url?.includes("/login") || config.url?.includes("/register") || config.url?.includes("/refresh");
+// ─── Factory ───────────────────────────────────────────────────────────────
+const createInstance = (baseURL: string): AxiosInstance => {
+  const instance = axios.create({
+    baseURL,
+    headers: { "Content-Type": "application/json" },
+  });
 
-  if (token && !isAuthRoute) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  // Request interceptor — attach API key + Bearer token
+  instance.interceptors.request.use((config) => {
+    const apiKey = import.meta.env.VITE_API_KEY?.trim();
+    const token = store.getState().auth.accessToken;
 
-  return config;
-});
+    config.headers.set("x-api-key", apiKey);
 
-api.interceptors.response.use(
-  (res) => res,
-  (error) => {
-    if (error.response?.status === 401) {
-      store.dispatch(logout());
+    const isAuthRoute = ["/login", "/register", "/refresh"].some((url) => config.url?.includes(url));
+
+    if (token && !isAuthRoute) {
+      config.headers.set("Authorization", `Bearer ${token}`);
     }
-    return Promise.reject(error);
-  }
-);
+
+    return config;
+  });
+
+  // Response interceptor — silent token refresh on 401
+  instance.interceptors.response.use(
+    (res) => res,
+    async (error) => {
+      const { config, response } = error;
+
+      // Non-401 or already retried → bail out
+      if (response?.status !== 401 || config._retry) {
+        return Promise.reject(error);
+      }
+
+      // Queue requests while a refresh is already in flight
+      if (isRefreshing) {
+        return new Promise((resolve) =>
+          subscribers.push((token) => {
+            config.headers.set("Authorization", `Bearer ${token}`);
+            resolve(instance(config));
+          })
+        );
+      }
+
+      config._retry = true;
+      isRefreshing = true;
+
+      try {
+        const { refreshToken, user } = store.getState().auth;
+        if (!refreshToken) throw new Error("No refresh token");
+
+        const { data } = await axios.post(
+          `${AUTH_URL}/refresh`,
+          { refreshToken },
+          { headers: { "x-api-key": import.meta.env.VITE_API_KEY } }
+        );
+
+        const { accessToken: newAt, refreshToken: newRt } = data.data;
+        store.dispatch(setCredentials({ accessToken: newAt, refreshToken: newRt, user: user! }));
+        onTokenRefreshed(newAt);
+
+        config.headers.set("Authorization", `Bearer ${newAt}`);
+        return instance(config);
+      } catch (err) {
+        store.dispatch(logout());
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+  );
+
+  return instance;
+};
+
+// ─── Named exports (drop-in replacements) ─────────────────────────────────
+export const api = createInstance(AUTH_URL);
+export const todoApi = createInstance(`${BASE_URL}/todos`);
+export const userApi = createInstance(`${BASE_URL}/users`);

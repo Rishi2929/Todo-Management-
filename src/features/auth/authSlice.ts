@@ -2,12 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { AuthState, User } from "./types";
 
-// const initialState: AuthState = {
-//   accessToken: localStorage.getItem("accessToken"),
-//   refreshToken: localStorage.getItem("refreshToken"),
-//   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
-// };
-
 const storedUser = localStorage.getItem("user");
 
 const initialState: AuthState = {
@@ -20,6 +14,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    //login
     setCredentials: (
       state,
       action: PayloadAction<{
@@ -38,6 +33,7 @@ const authSlice = createSlice({
       localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("user", JSON.stringify(user));
     },
+    //logout
     logout: (state) => {
       state.accessToken = null;
       state.refreshToken = null;
