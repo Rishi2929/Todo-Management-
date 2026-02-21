@@ -17,7 +17,8 @@ export const useUpdateUserRole = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: { role?: "user" | "admin"; name?: string } }) => updateUserRequest(id, updates),
+    mutationFn: ({ id, updates }: { id: string; updates: { role?: "user" | "admin"; name?: string } }) =>
+      updateUserRequest(id, updates),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

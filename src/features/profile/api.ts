@@ -2,6 +2,8 @@ import { userApi } from "../../lib/axios";
 
 export const fetchProfile = async () => {
   const { data } = await userApi.get("/me");
+  console.log("Fetch ", data.data);
+
   return data.data;
 };
 

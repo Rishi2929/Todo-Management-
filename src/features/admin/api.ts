@@ -25,7 +25,10 @@ export const fetchAllUsers = async (payload: GetUsersPayload): Promise<UsersResp
 
 /* ------------------ UPDATE USER ------------------ */
 
-export const updateUserRequest = async (id: string, updates: { name?: string; role?: "user" | "admin" }): Promise<AdminUser> => {
+export const updateUserRequest = async (
+  id: string,
+  updates: { name?: string; role?: "user" | "admin" },
+): Promise<AdminUser> => {
   const { data } = await userApi.patch<{ data: AdminUser }>(`/${id}`, updates);
 
   return {

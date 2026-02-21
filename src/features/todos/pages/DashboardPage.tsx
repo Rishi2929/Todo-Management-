@@ -140,7 +140,9 @@ export const DashboardPage = () => {
 
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
           <div className="px-6 pt-5 pb-3 border-b border-gray-200 flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">{editingId ? "Edit task" : "New task"}</span>
+            <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+              {editingId ? "Edit task" : "New task"}
+            </span>
             {editingId && (
               <button
                 onClick={() => {
@@ -246,7 +248,9 @@ export const DashboardPage = () => {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-3 flex-wrap">
-                    <h2 className={`font-semibold text-sm ${todo.status === "completed" ? "line-through text-gray-400" : "text-gray-900"}`}>
+                    <h2
+                      className={`font-semibold text-sm ${todo.status === "completed" ? "line-through text-gray-400" : "text-gray-900"}`}
+                    >
                       {todo.title}
                     </h2>
                     <span

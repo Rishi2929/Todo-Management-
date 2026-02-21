@@ -15,12 +15,7 @@ const nameSchema = z.object({
 const passwordSchema = z
   .object({
     currentPassword: z.string().min(1, "Required"),
-    newPassword: z
-      .string()
-      .min(8, "Minimum 8 characters")
-      .regex(/[A-Z]/, "Must contain uppercase")
-      .regex(/[a-z]/, "Must contain lowercase")
-      .regex(/[0-9]/, "Must contain number"),
+    newPassword: z.string().min(8, "Minimum 8 characters").regex(/[A-Z]/, "Must contain uppercase").regex(/[a-z]/, "Must contain lowercase").regex(/[0-9]/, "Must contain number"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -48,6 +43,7 @@ export const ProfilePage = () => {
   });
 
   useEffect(() => {
+    console.log("Profile Page ", data);
     if (data?.name) {
       reset({ name: data.name });
     }
@@ -103,9 +99,7 @@ export const ProfilePage = () => {
         {/* Profile Card */}
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 space-y-6">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold text-lg">
-              {data?.name?.charAt(0).toUpperCase()}
-            </div>
+            <div className="h-12 w-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold text-lg">{data?.name?.charAt(0).toUpperCase()}</div>
             <div>
               <p className="text-sm font-semibold text-gray-900">{data?.name}</p>
               <div className="flex items-center gap-2 text-xs text-gray-500">

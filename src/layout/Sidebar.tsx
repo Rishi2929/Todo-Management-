@@ -14,9 +14,9 @@ export const Sidebar = () => {
   const active = "text-indigo-600";
   const inactive = "text-gray-500 hover:text-gray-900";
 
-  useEffect(() => {
-    console.log("sidebar");
-  }, []);
+  // useEffect(() => {
+  //   console.log("sidebar");
+  // }, []);
 
   return (
     <>
@@ -98,10 +98,7 @@ export const Sidebar = () => {
               <span>Admin</span>
             </NavLink>
           ) : (
-            <button
-              onClick={logout}
-              className="flex flex-col items-center justify-center gap-1 px-3 py-2 text-xs font-medium text-gray-500 hover:text-gray-900 transition"
-            >
+            <button onClick={logout} className="flex flex-col items-center justify-center gap-1 px-3 py-2 text-xs font-medium text-gray-500 hover:text-gray-900 transition">
               <LogOut className="h-5 w-5" />
               <span>Logout</span>
             </button>

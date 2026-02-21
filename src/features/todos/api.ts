@@ -10,7 +10,11 @@ export const fetchTodos = async (page: number, limit: number): Promise<TodosResp
   };
 };
 
-export const createTodoRequest = async (payload: { title: string; description: string; priority?: string }): Promise<Todo> => {
+export const createTodoRequest = async (payload: {
+  title: string;
+  description: string;
+  priority?: string;
+}): Promise<Todo> => {
   const response = await todoApi.post("/add", payload);
   return response.data.data;
 };

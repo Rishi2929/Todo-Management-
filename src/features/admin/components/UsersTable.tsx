@@ -55,7 +55,11 @@ export const UsersTable = ({ users, onToggleRole, onDelete, isDeleting, updating
                         disabled={updatingId === user._id}
                         className="inline-flex items-center gap-1 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-medium text-white shadow-sm disabled:opacity-60"
                       >
-                        {updatingId === user._id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield className="h-4 w-4" />}
+                        {updatingId === user._id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Shield className="h-4 w-4" />
+                        )}
                         Toggle
                       </button>
 

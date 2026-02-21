@@ -31,12 +31,14 @@ export const loginRequest = async (payload: LoginPayload) => {
 
 export const registerRequest = async (payload: { name: string; email: string; password: string }) => {
   const { data } = await api.post("/register", payload);
+
   return data;
 };
 
-export const refreshTokenRequest = async (refreshToken: string) => {
-  const response = await api.post("/refresh", {
-    refreshToken,
-  });
-  return response.data.data;
-};
+// export const refreshTokenRequest = async (refreshToken: string) => {
+//   const response = await api.post("/refresh", {
+//     refreshToken,
+//   });
+//   console.log(response.data.data);
+//   return response.data.data;
+// };

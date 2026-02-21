@@ -8,6 +8,7 @@ const AUTH_URL = `${BASE_URL}/auth`;
 
 // ─── Refresh token state ───────────────────────────────────────────────────
 let isRefreshing = false;
+
 let subscribers: ((token: string) => void)[] = [];
 
 const onTokenRefreshed = (token: string) => {
@@ -26,6 +27,7 @@ const createInstance = (baseURL: string): AxiosInstance => {
   instance.interceptors.request.use((config) => {
     const apiKey = import.meta.env.VITE_API_KEY?.trim();
     const token = store.getState().auth.accessToken;
+    console.log("Axios ts", token);
 
     config.headers.set("x-api-key", apiKey);
 
@@ -44,12 +46,15 @@ const createInstance = (baseURL: string): AxiosInstance => {
     async (error) => {
       const { config, response } = error;
 
-      // Non-401 or already retried → bail out
+      // Case 1 - Not 401 or already tried once
       if (response?.status !== 401 || config._retry) {
         return Promise.reject(error);
       }
 
+      console.log("Config: ", config);
+
       // Queue requests while a refresh is already in flight
+      // Case 2 - If already refreshing
       if (isRefreshing) {
         return new Promise((resolve) =>
           subscribers.push((token) => {
@@ -59,6 +64,7 @@ const createInstance = (baseURL: string): AxiosInstance => {
         );
       }
 
+      //Case 3 - If not refreshing yet
       config._retry = true;
       isRefreshing = true;
 
@@ -66,19 +72,29 @@ const createInstance = (baseURL: string): AxiosInstance => {
         const { refreshToken, user } = store.getState().auth;
         if (!refreshToken) throw new Error("No refresh token");
 
-        const { data } = await axios.post(
-          `${AUTH_URL}/refresh`,
-          { refreshToken },
-          { headers: { "x-api-key": import.meta.env.VITE_API_KEY } }
-        );
+        // Call refresh API
+        const { data } = await axios.post(`${AUTH_URL}/refresh`, { refreshToken }, { headers: { "x-api-key": import.meta.env.VITE_API_KEY } });
 
+        // If refresh succeeds
         const { accessToken: newAt, refreshToken: newRt } = data.data;
-        store.dispatch(setCredentials({ accessToken: newAt, refreshToken: newRt, user: user! }));
+        console.log("Refresh succeeded: ", data.data);
+
+        // Updating redux store
+        store.dispatch(
+          setCredentials({
+            accessToken: newAt,
+            refreshToken: newRt,
+            user: user!,
+          })
+        );
+        //notify waiting requests
         onTokenRefreshed(newAt);
 
+        // Retrying original request
         config.headers.set("Authorization", `Bearer ${newAt}`);
         return instance(config);
       } catch (err) {
+        // If user fails
         store.dispatch(logout());
         return Promise.reject(err);
       } finally {

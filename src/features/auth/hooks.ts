@@ -15,7 +15,7 @@ export const useAuth = () => {
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
           user: data.user,
-        })
+        }),
       );
     },
   });

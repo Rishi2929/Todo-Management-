@@ -1,10 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchProfile, updateProfileRequest, changePasswordRequest } from "./api";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../app/store";
 
 export const useProfile = () => {
+  const userId = useSelector((state: RootState) => state.auth.user?.id);
+
   return useQuery({
-    queryKey: ["profile"],
+    queryKey: ["profile", userId],
     queryFn: fetchProfile,
+    enabled: !!userId,
   });
 };
 

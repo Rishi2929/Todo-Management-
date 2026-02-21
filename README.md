@@ -1,73 +1,133 @@
-# React + TypeScript + Vite
+# 🗂️ Full Stack Todo & Admin Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A production-structured MERN stack application with authentication, role-based access control, pagination, and per-action loading states.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+### Authentication
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- JWT-based authentication
+- Access + Refresh token mechanism
+- Silent token refresh using Axios interceptors
+- Protected routes
+- Role-based access (Admin / User)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Todo Management (User)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Create todo
+- Edit todo
+- Delete todo
+- Toggle status (Pending / Completed)
+- Pagination
+- Form validation using React Hook Form
+- Per-action loading states
+- Fully responsive UI
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Admin Panel
+
+- View paginated users
+- Toggle user roles
+- Delete user with confirmation modal
+- Per-row loading indicators
+- Proper mutation state handling (React Query)
+- Responsive table + mobile card layout
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- React (Vite + TypeScript)
+- Tailwind CSS
+- React Query
+- React Hook Form
+- Axios (centralized instance)
+- Lucide Icons
+
+### Backend
+
+- Node.js
+- Express
+- MongoDB
+- JWT Authentication
+
+---
+
+## Architecture Highlights
+
+### 1. Centralized Axios Instance
+
+- API key injection
+- Automatic access token injection
+- Silent refresh logic
+- Request queueing during token refresh
+
+---
+
+### 2. Mutation Ownership Pattern
+
+- Mutations live in parent components (AdminPage / TodoPage)
+- Loading state passed down as props
+- No duplicated async state
+- Single source of truth
+
+---
+
+### 3. Per-Row Loading
+
+- Toggle role shows spinner only for that row
+- Delete modal disables while processing
+- Todos support independent loading states
+
+---
+
+### 4. Type Safety
+
+- Strict TypeScript interfaces
+- Unified role type
+- Reusable pagination interface
+- Strongly typed API responses
+
+---
+
+## Installation
+
+```bash
+git clone <https://github.com/Rishi2929/Todo-Management-.git>
+cd project
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Run Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Frontend
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+npm run dev
+```
+
+## Environment Variables
+
+```bash
+VITE_API_KEY=your_api_key
+```
+
+## Folder Structure (Frontend)
+
+```bash
+src/
+ ├── app/
+ ├── features/
+ ├── layout/
+ ├── lib/
+ ├── routes/
+ ├── types/
+ └── api/
 ```
