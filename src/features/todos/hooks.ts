@@ -2,13 +2,19 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tansta
 import { fetchTodos, createTodoRequest, updateTodoRequest, deleteTodoRequest } from "./api";
 import type { TodosResponse } from "./types";
 import type { Todo } from "./types";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../app/store";
 
 /* ------------------ QUERY ------------------ */
 
 export const useTodos = (page: number, limit: number) => {
+  const userId = useSelector((state: RootState) => state.auth.user?.id);
+
   return useQuery<TodosResponse>({
-    queryKey: ["todos", page, limit],
+    queryKey: ["todos", userId, page, limit],
     queryFn: () => fetchTodos(page, limit),
+    enabled: !!userId,
+
     placeholderData: keepPreviousData,
   });
 };
